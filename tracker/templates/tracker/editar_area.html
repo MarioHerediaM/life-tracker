@@ -1,0 +1,30 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<div class="label">EDITAR ÁREA</div>
+
+<div class="card">
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display:flex; gap:8px;">
+            <input type="text" name="emoji" value="{{ area.emoji }}"
+                style="width:52px; text-align:center; flex-shrink:0;">
+            <input type="text" name="nombre" value="{{ area.nombre }}" required>
+        </div>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <input type="color" name="color" value="{{ area.color }}"
+                style="width:42px; height:38px; padding:2px; flex-shrink:0;">
+            <div style="flex:1;">
+                <label class="label">PESO %</label>
+                <input type="number" name="peso" value="{{ area.peso }}" min="5" max="60">
+            </div>
+        </div>
+        <button type="submit" class="btn" style="width:100%;">Guardar cambios</button>
+    </form>
+</div>
+
+<a href="{% url 'gestionar_areas' %}" class="btn btn-outline"
+    style="display:block; text-align:center; margin-top:8px;">← Volver</a>
+
+{% endblock %}

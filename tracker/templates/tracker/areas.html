@@ -1,0 +1,46 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<div class="label">MIS ÁREAS</div>
+
+{% for area in areas %}
+<div class="card" style="display:flex; align-items:center; gap:12px;">
+    <div style="font-size:22px;">{{ area.emoji }}</div>
+    <div style="flex:1;">
+        <div style="font-size:14px; font-weight:600;">{{ area.nombre }}</div>
+        <div style="font-size:11px; color:#5a6080;">Peso: {{ area.peso }}%</div>
+    </div>
+    <div style="width:12px; height:12px; border-radius:50%; background:{{ area.color }};"></div>
+    <a href="{% url 'editar_area' area.pk %}" class="btn btn-outline" style="padding:6px 10px; font-size:12px;">✏️</a>
+    <a href="{% url 'eliminar_area' area.pk %}" class="btn btn-danger" style="padding:6px 10px; font-size:12px;">✕</a>
+</div>
+{% empty %}
+<div class="card" style="text-align:center; color:#3a4060; padding:24px;">
+    Sin áreas aún. Crea la primera abajo.
+</div>
+{% endfor %}
+
+<!-- Formulario nueva área -->
+<div class="card" style="margin-top:16px;">
+    <div class="label">+ NUEVA ÁREA</div>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display:flex; gap:8px;">
+            <input type="text" name="emoji" placeholder="⭐" style="width:52px; text-align:center; flex-shrink:0; margin-bottom:0;">
+            <input type="text" name="nombre" placeholder="Nombre del área" required style="flex:1; margin-bottom:0;">
+        </div>
+        <div style="display:flex; gap:8px; margin-top:10px; align-items:center;">
+            <input type="color" name="color" value="#4F8EF7" style="width:42px; height:38px; padding:2px; flex-shrink:0; margin-bottom:0;">
+            <div style="flex:1;">
+                <label style="font-size:11px; color:#5a6080;">PESO %</label>
+                <input type="number" name="peso" value="10" min="5" max="60" style="margin-bottom:0;">
+            </div>
+        </div>
+        <button type="submit" class="btn" style="width:100%; margin-top:10px;">Agregar área</button>
+    </form>
+</div>
+
+<a href="{% url 'dashboard' %}" class="btn btn-outline" style="display:block; text-align:center; margin-top:8px;">← Volver</a>
+
+{% endblock %}

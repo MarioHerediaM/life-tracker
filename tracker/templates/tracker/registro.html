@@ -1,0 +1,39 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<div style="max-width:340px; margin:40px auto;">
+    <div style="text-align:center; margin-bottom:24px;">
+        <div style="font-size:32px; font-weight:800; color:#4F8EF7; letter-spacing:-1px;">LifeScore™</div>
+        <div style="font-size:11px; color:#5a6080; letter-spacing:2px; margin-top:4px;">CREAR CUENTA</div>
+    </div>
+
+    <div class="card">
+        <div class="label">REGISTRO</div>
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <label style="font-size:11px; color:#5a6080; letter-spacing:1px;">
+                {{ field.label|upper }}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color:#F76B6B; font-size:11px; margin-top:-8px; margin-bottom:8px;">
+                {{ field.errors|join:", " }}
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            <button type="submit" class="btn" style="width:100%; margin-top:4px;">
+                Crear cuenta →
+            </button>
+        </form>
+    </div>
+
+    <div style="text-align:center; margin-top:12px; font-size:12px; color:#5a6080;">
+        ¿Ya tienes cuenta? <a href="{% url 'login' %}" style="color:#4F8EF7;">Inicia sesión</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<!-- Score card -->
+<div class="card" style="display:flex; align-items:center; gap:20px;">
+    <div style="text-align:center; flex-shrink:0;">
+        <div style="font-size:42px; font-weight:800; color:{% if score >= 70 %}#4FD47C{% elif score >= 40 %}#F7A04F{% else %}#F76B6B{% endif %};">
+            {{ score }}
+        </div>
+        <div style="font-size:10px; color:#5a6080; letter-spacing:2px;">SCORE</div>
+    </div>
+    <div style="flex:1;">
+        <div class="label">
+            {{ inicio|date:"d M" }} — {{ fin|date:"d M Y" }}
+        </div>
+        <div style="font-size:26px; font-weight:700;">{{ total_pts }} <span style="font-size:13px; color:#5a6080;">pts</span></div>
+
+        <!-- Mini historial -->
+        <div style="display:flex; gap:4px; margin-top:10px; align-items:flex-end; height:24px;">
+            {% for h in historial %}
+            <div style="
+                flex:1;
+                background:{% if h.offset == offset %}#4F8EF7{% else %}#252a40{% endif %};
+                border-radius:3px;
+                height:{% if h.pts %}{{ h.pts|divisibleby:1 }}{% endif %}px;
+                min-height:4px;
+                max-height:24px;
+            " title="{{ h.pts }} pts"></div>
+            {% endfor %}
+        </div>
+        <div style="font-size:9px; color:#3a4060; margin-top:2px; letter-spacing:1px;">4 SEMANAS</div>
+    </div>
+</div>
+
+<!-- Navegación semanas -->
+<div style="display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap;">
+    {% for i, label in semanas %}
+    <a href="?semana={{ i }}" style="
+        flex-shrink:0;
+        background:{% if offset == i %}#252a40{% else %}transparent{% endif %};
+        border:1px solid {% if offset == i %}#4F8EF7{% else %}#252a40{% endif %};
+        border-radius:8px; padding:6px 12px;
+        font-size:11px; color:{% if offset == i %}#4F8EF7{% else %}#5a6080{% endif %};
+        text-decoration:none; letter-spacing:1px;
+    ">{{ label }}</a>
+    {% endfor %}
+</div>
+
+<!-- Áreas -->
+<div class="label">PROGRESO POR ÁREA</div>
+{% for s in stats %}
+<div class="card" style="display:flex; align-items:center; gap:12px;">
+    <div style="font-size:22px;">{{ s.area.emoji }}</div>
+    <div style="flex:1;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <span style="font-size:13px; font-weight:600;">{{ s.area.nombre }}</span>
+            <span style="font-size:12px; color:#9aa0c0;">{{ s.pts }} pts · {{ s.count }} acc.</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width:{{ s.progreso }}%; background:{{ s.area.color }}; box-shadow:0 0 8px {{ s.area.color }}88;"></div>
+        </div>
+        <div style="font-size:10px; color:#3a4060;">Peso: {{ s.area.peso }}% · {{ s.progreso }}% del objetivo</div>
+    </div>
+</div>
+{% empty %}
+<div class="card" style="text-align:center; color:#3a4060; padding:30px;">
+    No tienes áreas aún. <a href="{% url 'gestionar_areas' %}" style="color:#4F8EF7;">Crea una →</a>
+</div>
+{% endfor %}
+
+{% endblock %}
