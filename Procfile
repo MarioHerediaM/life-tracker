@@ -1,1 +1,1 @@
-web: gunicorn life_tracker.wsgi
+web: gunicorn lifetracker.wsgi
