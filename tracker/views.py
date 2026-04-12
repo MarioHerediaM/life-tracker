@@ -60,6 +60,7 @@ def dashboard(request):
         'fin': fin,
         'historial': historial,
         'semanas': [(0, 'Esta semana'), (1, 'Sem. anterior'), (2, 'Hace 2 sem.'), (3, 'Hace 3 sem.')],
+        'actividades': actividades,
     }
     return render(request, 'tracker/dashboard.html', context)
 
@@ -134,3 +135,19 @@ def editar_area(request, pk):
         area.save()
         return redirect('gestionar_areas')
     return render(request, 'tracker/editar_area.html', {'area': area})
+
+@login_required
+def editar_actividad(request, pk):
+    actividad = get_object_or_404(Actividad, pk=pk, usuario=request.user)
+    areas = Area.objects.filter(usuario = request.user)
+    if request.method == 'POST':
+        actividad.area = get_object_or_404(Area, pk=request.POST.get('area'), usuario=request.user)
+        actividad.descripcion = request.POST.get('descripcion', actividad.descripcion)
+        actividad.puntos = request.POST.get('puntos', actividad.puntos)
+        actividad.save()
+        return redirect('dashboard')
+    return render(request, 'tracker/editar_actividad.html',{
+        'actividad': actividad,
+        'areas': areas,
+        'puntos_choices': Actividad.PUNTOS_CHOICES,
+    })

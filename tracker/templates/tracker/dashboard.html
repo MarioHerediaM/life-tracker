@@ -69,4 +69,29 @@
 </div>
 {% endfor %}
 
+<!-- Lista de actividades de la semana -->
+<div class="label" style="margin-top:20px;">ACTIVIDADES DE LA SEMANA</div>
+{% for actividad in actividades %}
+<div class="card" style="display:flex; align-items:center; gap:10px;">
+    <div style="font-size:18px;">{{ actividad.area.emoji }}</div>
+    <div style="flex:1;">
+        <div style="font-size:13px;">{{ actividad.descripcion }}</div>
+        <div style="font-size:10px; color:#5a6080;">
+            {{ actividad.area.nombre }} · {{ actividad.fecha|date:"d M" }}
+        </div>
+    </div>
+    <div style="background:{{ actividad.area.color }}22; color:{{ actividad.area.color }};
+        border-radius:6px; padding:2px 8px; font-size:13px; font-weight:700;">
+        +{{ actividad.puntos }}
+    </div>
+    <a href="{% url 'editar_actividad' actividad.pk %}" 
+        style="color:#5a6080; text-decoration:none; font-size:14px;">✏️</a>
+    <a href="{% url 'eliminar_actividad' actividad.pk %}"
+        style="color:#F76B6B; text-decoration:none; font-size:14px;">✕</a>
+</div>
+{% empty %}
+<div class="card" style="text-align:center; color:#3a4060; padding:20px;">
+    Sin actividades esta semana.
+</div>
+{% endfor %}
 {% endblock %}

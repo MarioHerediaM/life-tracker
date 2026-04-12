@@ -1,0 +1,63 @@
+{% extends 'tracker/base.html' %}
+
+{% block content %}
+
+<div class="label">EDITAR ACTIVIDAD</div>
+
+<div class="card">
+    <form method="POST">
+        {% csrf_token %}
+
+        <label class="label">ÁREA</label>
+        <select name="area">
+            {% for area in areas %}
+            <option value="{{ area.pk }}" {% if area.pk == actividad.area.pk %}selected{% endif %}>
+                {{ area.emoji }} {{ area.nombre }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <label class="label">DESCRIPCIÓN</label>
+        <input type="text" name="descripcion" value="{{ actividad.descripcion }}" required>
+
+        <label class="label">PUNTOS</label>
+        <div style="display:flex; gap:6px; margin-bottom:12px;">
+            {% for val, label in puntos_choices %}
+            <label style="flex:1; cursor:pointer;">
+                <input type="radio" name="puntos" value="{{ val }}"
+                    {% if val == actividad.puntos %}checked{% endif %}
+                    style="display:none;">
+                <div class="pts-btn" style="
+                    text-align:center; border:1px solid #252a40;
+                    border-radius:8px; padding:8px 0; cursor:pointer;
+                    font-size:12px; color:#5a6080;
+                    {% if val == actividad.puntos %}border-color:#4F8EF7; color:#4F8EF7;{% endif %}
+                ">
+                    <div style="font-size:18px; font-weight:700;">{{ val }}</div>
+                    {{ label }}
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn" style="width:100%;">Guardar cambios</button>
+    </form>
+</div>
+
+<a href="{% url 'dashboard' %}" class="btn btn-outline"
+    style="display:block; text-align:center; margin-top:8px;">← Volver</a>
+
+<script>
+    document.querySelectorAll('input[name="puntos"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.querySelectorAll('.pts-btn').forEach(btn => {
+                btn.style.borderColor = '#252a40';
+                btn.style.color = '#5a6080';
+            });
+            radio.nextElementSibling.style.borderColor = '#4F8EF7';
+            radio.nextElementSibling.style.color = '#4F8EF7';
+        });
+    });
+</script>
+
+{% endblock %}
